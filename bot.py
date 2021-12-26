@@ -1,44 +1,46 @@
+from discord import channel, message
+import discord.ext
 import discord
+import os
+from dotenv import load_dotenv
 
-bot = discord.Bot()
+load_dotenv()
 
-#function to greet new user
-@bot.event
-async def on_member_join(member):
-    await bot.send_message(member, "Welcome to the server, " + member.mention + "!")
+TOKEN = os.getenv('Discord_Token')
 
-
-#register a user with a role 
-@bot.event
-async def on_message(message):
-    if message.content.startswith("!register"):
-        role = discord.utils.get(message.server.roles, name="Registered")
-        await bot.add_roles(message.author, role)
-        await bot.send_message(message.channel, "You have been registered!")
-
-#if already registered, give warning
-@bot.event
-async def on_message(message):
-    if message.content.startswith("!register"):
-        role = discord.utils.get(message.server.roles, name="Registered")
-        if role in message.author.roles:
-            await bot.send_message(message.channel, "You are already registered!")
-
-#function to sent message to channel when a user gave reaction to a message
-@bot.event
-async def on_reaction_add(reaction, user):
-    for reaction in reaction.message.reactions:
-        await bot.send_message(reaction.message.channel, "{} Gave reaction to, {}!".format(user.name,user.mention))
-
-#function to retrive names in database when asked by a user of certain role
-@bot.event
-async def on_message(message):
-    if message.content.startswith("!names"):
-        role = discord.utils.get(message.server.roles, name="Registered")
-        if role in message.author.roles:
-            await bot.send_message(message.channel, "Names of users with the role Registered:")
-            for member in message.server.members:
-                if role in member.roles:
-                    await bot.send_message(message.channel, member.name)
+class MyClient(discord.Client):
+    async def on_ready(self):
+        print(f'Logged on as {self.user}!')
 
 
+    async def on_message(self,message):
+        if message.author == self.user:
+            return
+        str_name = str(message.author).split("#")
+        str_act = str_name[0]
+        
+        if message.content.startswith('!hello'):
+            await message.channel.send('Hey...\n'+ str_act +"\nHow you Doin..??")
+        if message.content.startswith('!greet'):
+            str_gret = str(message.mentions).split(" ")
+            str_gret = str_gret[2].split("'")
+            str_gret = str_gret[1]
+            await message.channel.send(str_act +" Greeted "+str_gret)
+        if message.content.startswith("💐"):
+            str_gret = str(message.mentions).split(" ")
+            str_gret = str_gret[2].split("'")
+            str_gret = str_gret[1]
+            await message.channel.send(str_act +" Greeted "+str_gret)
+
+
+    async def on_member_join(self, member):
+        guild = member.guild
+        if guild.system_channel is not None:
+            to_send = f"Welcome {member.mention} to {guild.name}!"
+            await guild.system_channel.send(to_send) 
+
+
+
+
+bot = MyClient()
+bot.run(TOKEN)
