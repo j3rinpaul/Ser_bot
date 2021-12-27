@@ -33,25 +33,17 @@ async def on_message(message):
         str_gret = str(message.mentions).split(" ")
         str_gret = str_gret[2].split("'")
         str_gret = str_gret[1]
-        await message.channel.send(str_act +" Greeted "+str_gret)
+        await message.channel.send(" Greetings "+str_gret +" 💐\n"+"\t~"+str_act)
 
-@client.event
-async def on_member_join(member):
-    guild = member.guild
-    if guild.system_channel is not None:
-        await guild.system_channel.send(f"Welcome {member.mention} to {guild.name}!") 
+
         
 
 @client.command()
-async def add_role(ctx,role:discord.Role,user:discord.User):
+async def add_role(ctx,role:discord.Role,user:discord.Member):
     if ctx.author.guild_permissions.administrator:
-        await user.add_role(role)
-        await ctx.send(f'Role Given to {role.mention} to {user.mention}')
-# @client.command()
-# async def remove_role(ctx,role:discord.Role,user:discord.User):
-#     if ctx.author.guild_permissions.administrator:
-#         await user.remove_role(role)
-#         await ctx.send(f'Role {role.mention} removed')
+        await user.add_roles(role)
+        await ctx.send(f'Role  {role.mention} Given to {user.mention}')
+
 
 
 
