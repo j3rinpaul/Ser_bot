@@ -22,7 +22,4 @@
  
    <br>
  
-<img src="https://forthebadge.com/images/badges/made-with-python.svg">  
 
-## Link To add Ser_bot :
-  <a>https://discord.com/api/oauth2/authorize?client_id=842736570699612202&permissions=8&scope=bot</a>
